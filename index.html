@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang = "en">
+    <head>
+        <title>Productivity Helper</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <div id = "header">
+            <h1>Productivity Helper</h1>
+        </div>
+        <div id = "content">
+            <div id = "heading">
+                <h1>Tools</h1>
+            </div>
+            <div id = "timer">
+                <h1>timer</h1>
+                <div id = "timerSettings">
+                    <div class="setting-input">
+                        <label for="workInput">Work (min)</label>
+                        <input type="number" id="workInput" min="1" max="60" value="25">
+                    </div>
+                    <div class="setting-input">
+                        <label for="breakInput">Break (min)</label>
+                        <input type="number" id="breakInput" min="1" max="30" value="5">
+                    </div>
+                </div>
+                <h1 id = "sessionType">Work</h1>
+                <h1 id = "timerdisplay">00:00</h1>
+                <div id = "timerbuttons">
+                    <button id = "start">start</button>
+                    <button id = "pause">pause</button>
+                    <button id = "reset">reset</button>
+                </div>
+            </div>
+            <div id = "checklist">
+                <h1>checklist</h1>
+                <div id = "Additems">
+                    <h1>Add items here</h1>
+                </div>
+                <div id = "itemslist">
+                    <h1>items will appear here</h1>
+                </div>
+            </div>
+            <div id = "summary">
+                <h1>summary</h1>
+                <div id = "stats">
+                    <h1></h1>
+                </div>
+            </div>
+        </div>
+        <audio id="lofiAudio">
+            <source src="lofimusic_part1.mp3" type="audio/mpeg">
+        </audio>
+        <script src="script.js"></script>
+    </body>
+</html>
