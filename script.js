@@ -11,8 +11,9 @@ let totalBreakSeconds = 0;
 let sessionsCompleted = 0;
 
 // Audio Variables
-let currentAudioChunk = 1;
+let currentAudioChunk = null;
 const totalAudioChunks = 7; // lofimusic_part0.mp3 through lofimusic_part6.mp3
+const excludedTrack = 6; // Track 6 is excluded
 
 // Checklist Variables
 let items = [];
@@ -25,21 +26,23 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ==================== AUDIO FUNCTIONALITY ====================
+function getRandomTrack() {
+    let randomTrack;
+    do {
+        randomTrack = Math.floor(Math.random() * totalAudioChunks);
+    } while (randomTrack === excludedTrack);
+    return randomTrack;
+}
+
 function initializeAudio() {
     const audio = document.getElementById('lofiAudio');
-    // When a chunk finishes, load the next one
+    // When a chunk finishes, load a random one
     audio.addEventListener('ended', () => {
-        currentAudioChunk++;
-        if (currentAudioChunk < totalAudioChunks) {
+        if (isRunning && isWorkSession) {
+            // Load a new random track (excluding track 6)
+            const newTrack = getRandomTrack();
+            currentAudioChunk = newTrack;
             loadAudioChunk(currentAudioChunk);
-            // If music was playing, continue playing
-            if (isRunning && isWorkSession) {
-                audio.play().catch(err => console.log('Note: autoplay may be restricted'));
-            }
-        } else if (isRunning && isWorkSession) {
-            // Loop back to the first chunk
-            currentAudioChunk = 0;
-            loadAudioChunk(0);
             audio.play().catch(err => console.log('Note: autoplay may be restricted'));
         }
     });
@@ -90,7 +93,8 @@ function startTimer() {
     // Play lofi music when starting work session
     if (isWorkSession) {
         const audio = document.getElementById('lofiAudio');
-        // Load the current chunk and play
+        // Load a random track and play
+        currentAudioChunk = getRandomTrack();
         loadAudioChunk(currentAudioChunk);
         audio.play().catch(err => console.log('Note: autoplay may be restricted'));
     }
@@ -121,6 +125,7 @@ function startTimer() {
             } else {
                 // Resume music when break ends and work starts
                 const audio = document.getElementById('lofiAudio');
+                currentAudioChunk = getRandomTrack();
                 loadAudioChunk(currentAudioChunk);
                 audio.play().catch(err => console.log('Note: autoplay may be restricted'));
             }
@@ -146,7 +151,7 @@ function resetTimer() {
     clearInterval(timerInterval);
     currentSessionSeconds = 0;
     isWorkSession = true;
-    currentAudioChunk = 1;
+    currentAudioChunk = null;
     // Stop and reset music
     const audio = document.getElementById('lofiAudio');
     audio.pause();
@@ -188,35 +193,12 @@ function updateSessionDisplay() {
 
 // ==================== CHECKLIST FUNCTIONALITY ====================
 function initializeChecklist() {
-    const addItemsDiv = document.getElementById('Additems');
-    const itemsListDiv = document.getElementById('itemslist');
-
-    // Create input field and add button
-    const inputContainer = document.createElement('div');
-    inputContainer.className = 'input-container';
-    
-    const input = document.createElement('input');
-    input.type = 'text';
-    input.id = 'itemInput';
-    input.placeholder = 'Enter item...';
-    input.className = 'item-input';
-
-    const addBtn = document.createElement('button');
-    addBtn.textContent = 'Add';
-    addBtn.className = 'add-btn';
-    addBtn.addEventListener('click', addItem);
-
+    const input = document.getElementById('itemInput');
     input.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') addItem();
     });
-
-    inputContainer.appendChild(input);
-    inputContainer.appendChild(addBtn);
-    addItemsDiv.innerHTML = '';
-    addItemsDiv.appendChild(inputContainer);
-
-    // Create items list container
-    itemsListDiv.innerHTML = '<ul id="checklistItems" class="checklist-items"></ul>';
+    
+    renderChecklist();
 }
 
 function addItem() {
