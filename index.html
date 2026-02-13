@@ -35,10 +35,13 @@
             <div id = "checklist">
                 <h1>checklist</h1>
                 <div id = "Additems">
-                    <h1>Add items here</h1>
+                    <div class="input-container">
+                        <input type="text" id="itemInput" placeholder="Enter item..." class="item-input">
+                        <button class="add-btn" onclick="addItem()">Add</button>
+                    </div>
                 </div>
                 <div id = "itemslist">
-                    <h1>items will appear here</h1>
+                    <ul id="checklistItems" class="checklist-items"></ul>
                 </div>
             </div>
             <div id = "summary">
